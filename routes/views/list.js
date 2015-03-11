@@ -60,7 +60,7 @@ exports = module.exports = function(req, res) {
 
 		// TODO: implement a more sophisticated way to filter for people to only see
 		// what they have created by themselves
-		if (!req.user.isSuperUser) {
+		if (req.user.isSuperUser != undefined && !req.user.isSuperUser) {
 			query.where('createdBy', req.user);
 		}
 		
