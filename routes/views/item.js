@@ -148,6 +148,14 @@ exports = module.exports = function(req, res) {
 				});
 				
 				var appName = keystone.get('name') || 'Keystone';
+
+				_.each(req.list.fields, function(el) {
+					if (!!el.options.visibleIf) {
+						el.options.hidden = _.some(_.map(el.options.visibleIf, function(permission) {
+							return !req.user[permission];
+						}));
+					}
+				})
 				
 				keystone.render(req, res, 'item', _.extend(viewLocals, {
 					section: keystone.nav.by.list[req.list.key] || {},
