@@ -57,6 +57,12 @@ exports = module.exports = function(req, res) {
 	var renderView = function() {
 		
 		var query = req.list.paginate({ filters: queryFilters, page: req.params.page, perPage: req.list.get('perPage') }).sort(sort.by);
+
+		// TODO: implement a more sophisticated way to filter for people to only see
+		// what they have created by themselves
+		if (!req.user.isSuperUser) {
+			query.where('createdBy', req.user);
+		}
 		
 		req.list.selectColumns(query, columns);
 		
