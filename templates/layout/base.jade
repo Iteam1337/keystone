@@ -42,8 +42,8 @@ html
 								- path = navSection.lists[0].path
 							else
 								- path = '/keystone/' + navSection.lists[0].path
-
-							li(class=section.key == navSection.key ? 'active' : null): a(href=path)= navSection.label
+							if !navSection.lists[0].options.hidden
+								li(class=section.key == navSection.key ? 'active' : null): a(href=path)= navSection.label
 			if section.lists && section.lists.length > 1
 				nav(role='navigation')#section-nav.navbar.navbar-default.navbar-static-top: .container
 					.navbar-header
