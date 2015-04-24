@@ -1,8 +1,8 @@
-var _ = require('underscore'),
-	cx = require('classnames'),
-	React = require('react'),
-	Note = require('../components/Note');
-
+var _ = require('underscore');
+var cx = require('classnames');
+var evalDependsOn = require('../utils/evalDependsOn.js');
+var React = require('react');
+var Note = require('../components/Note');
 
 function validateSpec(spec) {
 	if (!_.isObject(spec.supports)) {
@@ -12,15 +12,6 @@ function validateSpec(spec) {
 		spec.focusTargetRef = 'focusTarget';
 	}
 	return spec;
-}
-
-function evalDependsOn(dependsOn, values) {
-	if (!_.isObject(dependsOn)) return true;
-	var keys = _.keys(dependsOn);
-	return (keys.length) ? _.every(keys, function(key) {
-		var matches = _.isArray(dependsOn[key]) ? dependsOn[key] : [dependsOn[key]];
-		return _.contains(matches, values[key]);
-	}, this) : true;
 }
 
 var Base = module.exports.Base = {
@@ -113,7 +104,7 @@ var Mixins = module.exports.Mixins = {
 				return null;
 			}
 			return (
-				<div className={"field field-type-" + this.props.type}>
+				<div className={'field field-type-' + this.props.type}>
 					<div className="col-sm-12">
 						<label className="uncollapse">
 							<a href="javascript:;" onClick={this.uncollapse}>+ Add {this.props.label.toLowerCase()}</a>

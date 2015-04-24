@@ -41,6 +41,17 @@ module.exports = Field.create({
 		if (prevState.isCollapsed && !this.state.isCollapsed) {
 			this.initWysiwyg();
 		}
+		
+		if (_.isEqual(this.props.dependsOn, this.props.currentDependencies)
+			&& !_.isEqual(this.props.currentDependencies, prevProps.currentDependencies)) {
+			var instance = tinymce.get(prevState.id);
+			if (instance) {
+				tinymce.EditorManager.execCommand('mceRemoveEditor', true, prevState.id)
+				this.initWysiwyg();
+			} else {
+				this.initWysiwyg();
+			}
+		}
 	},
 
 	componentDidMount: function() {
@@ -77,13 +88,13 @@ module.exports = Field.create({
 	},
 
 	getOptions: function() {
-  		var plugins = ['code', 'link'],
-  			options = _.defaults(
-  				{},
-             	this.props.wysiwyg,
-             	Keystone.wysiwyg.options
-         	),
-  			toolbar = options.overrideToolbar ? '' : 'bold italic | alignleft aligncenter alignright | bullist numlist | outdent indent | link';
+		var plugins = ['code', 'link'],
+			options = _.defaults(
+				{},
+				this.props.wysiwyg,
+				Keystone.wysiwyg.options
+			),
+			toolbar = options.overrideToolbar ? '' : 'bold italic | alignleft aligncenter alignright | bullist numlist | outdent indent | link';
 
 		if (options.enableImages) {
 			plugins.push('image');

@@ -2,14 +2,8 @@ var fs = require('fs'),
 	path = require('path'),
 	_ = require('underscore'),
 	express = require('express'),
-	async = require('async'),
-	jade = require('jade'),
-	moment = require('moment'),
-	numeral = require('numeral'),
-	cloudinary = require('cloudinary'),
-	utils = require('keystone-utils');
-
-var templateCache = {};
+	utils = require('keystone-utils'),
+	prepost = require('./lib/prepost');
 
 /**
  * Don't use process.cwd() as it breaks module encapsulation
@@ -31,7 +25,8 @@ var moduleRoot = (function(_rootPath) {
  */
 
 var Keystone = function() {
-	
+	prepost.mixin(this)
+		.register('pre:routes', 'pre:render');
 	this.lists = {};
 	this.paths = {};
 	this._options = {
@@ -44,10 +39,6 @@ var Keystone = function() {
 		'model prefix': null,
 		'module root': moduleRoot,
 		'frame guard': 'sameorigin'
-	};
-	this._pre = {
-		routes: [],
-		render: []
 	};
 	this._redirects = {};
 	
@@ -108,31 +99,12 @@ var Keystone = function() {
 _.extend(Keystone.prototype, require('./lib/core/options')());
 
 
-/**
- * Registers a pre-event handler.
- *
- * Valid events include:
- * - `routes` - calls the function before any routes are matched, after all other middleware
- *
- * @param {String} event
- * @param {Function} function to call
- * @api public
- */
-
-Keystone.prototype.pre = function(event, fn) {
-	if (!this._pre[event]) {
-		throw new Error('keystone.pre() Error: event ' + event + ' does not exist.');
-	}
-	this._pre[event].push(fn);
-	return this;
-};
-
-
 Keystone.prototype.prefixModel = function (key) {
 	var modelPrefix = this.get('model prefix');
 	
-	if (modelPrefix)
+	if (modelPrefix) {
 		key = modelPrefix + '_' + key;
+	}
 	
 	return require('mongoose/lib/utils').toCollectionName(key);
 };
@@ -144,7 +116,6 @@ Keystone.prototype.connect = require('./lib/core/connect');
 Keystone.prototype.start = require('./lib/core/start');
 Keystone.prototype.mount = require('./lib/core/mount');
 Keystone.prototype.routes = require('./lib/core/routes');
-Keystone.prototype.static = require('./lib/core/static');
 Keystone.prototype.render = require('./lib/core/render');
 Keystone.prototype.importer = require('./lib/core/importer');
 Keystone.prototype.createItems = require('./lib/core/createItems');
@@ -209,7 +180,7 @@ Keystone.prototype.import = function(dirname) {
 				imported[name] = doImport(fsPath);
 			} else {
 				// only import files that we can `require`
-				var ext  = path.extname(name);
+				var ext = path.extname(name);
 				var base = path.basename(name, ext);
 				if (require.extensions[ext]) {
 					imported[base] = require(fsPath);
