@@ -139,7 +139,7 @@ module.exports = Field.create({
 	},
 	
 	renderLoadingUI: function() {
-		return <div className='help-block'>loading...</div>;
+		return <div className='help-block'>laddar...</div>;
 	},
 	
 	updateValue: function(simpleValue, expandedValues) {
@@ -167,7 +167,7 @@ module.exports = Field.create({
 			
 			return body;
 		} else {
-			return <div className='field-value'>(not set)</div>;
+			return <div className='field-value'>(inte satt)</div>;
 		}
 	},
 	
@@ -177,15 +177,15 @@ module.exports = Field.create({
 		}
 		var body = [];
 
-		body.push(<Select multi={this.props.many} onChange={this.updateValue} name={this.props.path} asyncOptions={this.getOptions} value={this.state.expandedValues} />);
+		body.push(<Select noResultsText='Inga resultat hittades' searchPromptText='Börja skriva för att söka' placeholder='Välj...' multi={this.props.many} onChange={this.updateValue} name={this.props.path} asyncOptions={this.getOptions} value={this.state.expandedValues} />);
 		
-		if (!this.props.many && this.props.value) {
-			body.push(
-				<a href={'/keystone/' + this.props.refList.path + '/' + this.props.value} className='btn btn-link btn-goto-linked-item'>
-					view {this.props.refList.singular.toLowerCase()}
-				</a>
-			);
-		}
+		//if (!this.props.many && this.props.value) {
+			//body.push(
+				//<a href={'/keystone/' + this.props.refList.path + '/' + this.props.value} className='btn btn-link btn-goto-linked-item'>
+					//visa {this.props.refList.singular.toLowerCase()}
+				//</a>
+			//);
+		//}
 		
 		return body;
 	}

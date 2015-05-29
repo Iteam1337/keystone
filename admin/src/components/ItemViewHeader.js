@@ -49,7 +49,7 @@ var Header = React.createClass({
 		return (
 			<ul className="item-breadcrumbs" key="drilldown">
 				<li>
-					<a href="javascript:;" title={'Search ' + this.props.list.plural} onClick={this.toggleSearch.bind(this, true)}>
+					<a href="javascript:;" title={'Sök ' + this.props.list.plural} onClick={this.toggleSearch.bind(this, true)}>
 						<span className="ion-search"></span>
 					</a>
 				</li>
@@ -116,14 +116,14 @@ var Header = React.createClass({
 							onChange={this.searchStringChanged}
 							onFocus={this.searchFocusChanged.bind(this, true)}
 							onBlur={this.searchFocusChanged.bind(this, false)}
-							placeholder={'Search ' + list.plural}
+							placeholder={'Sök ' + list.plural}
 							className="form-control searchbox-input"
 						/>
 					</div>
 					<div className="searchbox-button">
-						<button type="submit" className={submitButtonClass}>Search</button>
+						<button type="submit" className={submitButtonClass}>Sök</button>
 					</div>
-					<button type="button" className="btn btn-link btn-cancel" onClick={this.toggleSearch.bind(this, false)}>Cancel</button>
+					<button type="button" className="btn btn-link btn-cancel" onClick={this.toggleSearch.bind(this, false)}>Avbryt</button>
 				</form>
 			</div>
 		);
@@ -159,7 +159,7 @@ var Header = React.createClass({
 			<li>
 				<a className="item-toolbar-create-button" href="javascript:;" onClick={this.toggleCreate.bind(this, true)}>
 					<span className="mr-5 ion-plus"></span>
-					New {this.props.list.singular}
+					Ny {this.props.list.singular}
 				</a>
 			</li>
 		);

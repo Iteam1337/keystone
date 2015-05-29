@@ -69,7 +69,7 @@ module.exports = {
 		return (
 			<div>
 				{this.state.values.map(this.renderItem)}
-				<button type="button" className='btn btn-xs btn-default' onClick={this.addItem}>Add item</button>
+				<button type="button" className='btn btn-xs btn-default' onClick={this.addItem}>Lägg till</button>
 			</div>
 		);
 	},

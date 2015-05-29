@@ -39,7 +39,25 @@
 // Typography
 // -------------------------
 
-@font-family-sans-serif:  "Helvetica Neue", Helvetica, Arial, sans-serif;
+@font-face {
+  font-family: 'DINNext';
+  src: url('/fonts/DINNextLTPro-Regular.otf') format('opentype');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'DINNext';
+  src: url('/fonts/DINNextLTPro-Light.otf') format('opentype');
+  font-weight: 200;
+}
+
+@font-face {
+  font-family: 'DINNext';
+  src: url('/fonts/DINNextLTPro-Medium.otf') format('opentype');
+  font-weight: 600;
+}
+
+@font-family-sans-serif:  "DINNext", Helvetica, Arial, sans-serif;
 @font-family-serif:       Georgia, "Times New Roman", Times, serif;
 @font-family-monospace:   Monaco, Menlo, Consolas, "Courier New", monospace;
 @font-family-base:        @font-family-sans-serif;

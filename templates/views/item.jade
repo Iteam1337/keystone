@@ -19,7 +19,7 @@ block content
 	div#item-view
 	
 	if showRelationships
-		h2.relationship-heading.form-heading Relationships
+		h2.relationship-heading.form-heading Relationer
 			each rel in relationships
 				if rel.items.results.length
 					h3.form-heading.relationship-heading: a(href='/keystone/' + rel.list.path)= (rel.label) ? rel.label : rel.list.label

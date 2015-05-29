@@ -23,19 +23,20 @@ html
 		#wrap
 			nav(role='navigation')#header.navbar.navbar-default.navbar-static-top: .container
 				a(href=backUrl).navbar-backtobrand-trigger.hidden-xs: span.ion-arrow-left-c
-				.navbar-backtobrand-message Back to the #{brand} website
+				.navbar-backtobrand-message Tillbaks till #{brand}-sidan
 				.navbar-header
 					button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-headernav-collapse')
-						span.sr-only Toggle section navigation
+						span.sr-only Växla sektionsnavigering
 						span.icon-bar
 						span.icon-bar
 						span.icon-bar
-					a(href='/keystone', class=(section == 'home' ? 'active' : null)).navbar-brand= brand
+					a(href='/keystone', class=(section == 'home' ? 'active' : null)).navbar-brand
+						img(src='/images/sfam.svg')
 				.collapse.navbar-collapse.navbar-headernav-collapse
 					if signout
 						ul.nav.navbar-nav.navbar-right
 							li.divider
-							li: a(href=signout).signout Sign Out
+							li: a(href=signout).signout Logga ut
 					ul.nav.navbar-nav
 						each navSection in nav.sections
 							if navSection.lists[0].external
@@ -48,7 +49,7 @@ html
 				nav(role='navigation')#section-nav.navbar.navbar-default.navbar-static-top: .container
 					.navbar-header
 						button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-sectionnav-collapse')
-							span.sr-only Toggle list navigation
+							span.sr-only Växla listnavigering
 							span.icon-bar
 							span.icon-bar
 							span.icon-bar
@@ -69,14 +70,6 @@ html
 				block intro
 				+flash-messages(messages)
 				block content
-
-		#footer: .container
-			p 	#{brand} #{appversion} 
-				| Powered by <a href="http://keystonejs.com" target="_blank">KeystoneJS</a> version #{version}.
-				if User && user
-					|  Signed in as 
-					a(href='/keystone/' + User.path + '/' + user.id)= User.getDocumentName(user)
-					| .
 
 		//- Common
 		script(src="/keystone/js/lib/underscore/underscore-1.5.1.min.js")

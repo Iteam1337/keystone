@@ -59,7 +59,7 @@ module.exports = Field.create({
 			_.each(files, function (f) {
 				if (!_.contains(SUPPORTED_TYPES, f.type)) {
 					self.removeImage();
-					alert('Unsupported file type. Supported formats are: GIF, PNG, JPG, BMP, ICO, PDF, TIFF, EPS, PSD');
+					alert('Ej godkänt filformat. Godkända format är: GIF, PNG, JPG, BMP, ICO, PDF, TIFF, EPS, PSD');
 					return false;
 				}
 
@@ -200,15 +200,15 @@ module.exports = Field.create({
 	renderAlert: function() {
 		if (this.hasLocal()) {
 			return <div className='upload-queued pull-left'>
-				<div className='alert alert-success'>Image selected - save to upload</div>
+				<div className='alert alert-success'>Bild vald - spara för att ladda upp</div>
 			</div>;
 		} else if (this.state.origin === 'cloudinary') {
 			return <div className='select-queued pull-left'>
-				<div className='alert alert-success'>Image selected from Cloudinary</div>
+				<div className='alert alert-success'>Bild vald från servern</div>
 			</div>;
 		} else if (this.state.removeExisting) {
 			return <div className='delete-queued pull-left'>
-				<div className='alert alert-danger'>Image {this.props.autoCleanup ? 'deleted' : 'removed'} - save to confirm</div>
+				<div className='alert alert-danger'>Bild {this.props.autoCleanup ? 'raderad' : 'borttagen'} - spara för att bekräfta</div>
 			</div>;
 		} else {
 			return null;
@@ -224,14 +224,14 @@ module.exports = Field.create({
 	renderClearButton: function() {
 		if (this.state.removeExisting) {
 			return <button type='button' className='btn btn-link btn-cancel btn-undo-image' onClick={this.undoRemove}>
-				Undo Remove
+				Ånga borttagning
 			</button>;
 		} else {
 			var clearText;
 			if (this.hasLocal()) {
-				clearText = 'Cancel Upload';
+				clearText = 'Avbryt uppladdning';
 			} else {
-				clearText = (this.props.autoCleanup ? 'Delete Image' : 'Remove Image');
+				clearText = (this.props.autoCleanup ? 'Radera bild' : 'Ta bort bild');
 			}
 			return <button type='button' className='btn btn-link btn-cancel btn-delete-image' onClick={this.removeImage}>
 				{clearText}
@@ -251,7 +251,7 @@ module.exports = Field.create({
 		return <div key={this.props.path + '_toolbar'} className='image-toolbar'>
 			<div className='pull-left'>
 				<button type='button' onClick={this.changeImage} className='btn btn-default btn-upload-image'>
-					{this.hasImage() ? 'Change' : 'Upload'} Image
+					{this.hasImage() ? 'Ändra' : 'Ladda upp'} bild
 				</button>
 				{this.hasImage() && this.renderClearButton()}
 			</div>
@@ -285,7 +285,7 @@ module.exports = Field.create({
 
 		return <div className='image-select'>
 			<Select
-				placeholder='Search for an image from Cloudinary ...'
+				placeholder='Sök efter en bild på servern'
 				className='ui-select2-cloudinary'
 				name={this.props.paths.select}
 				id={'field_' + this.props.paths.select}
@@ -316,7 +316,7 @@ module.exports = Field.create({
 				container.push(this.renderImagePreview());
 				container.push(this.renderImageDetails());
 			} else {
-				container.push(<div className='help-block'>no image</div>);
+				container.push(<div className='help-block'>ingen bild</div>);
 			}
 		}
 

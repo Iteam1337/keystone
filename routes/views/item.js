@@ -14,7 +14,7 @@ exports = module.exports = function(req, res) {
 		}
 		
 		var renderView = function() {
-			
+
 			var relationships = _.values(_.compact(_.map(req.list.relationships, function(i) {
 				if (i.isValid) {
 					return _.clone(i);
@@ -69,7 +69,8 @@ exports = module.exports = function(req, res) {
 					list: req.list,
 					item: item,
 					relationships: relationships,
-					showRelationships: showRelationships
+					showRelationships: showRelationships,
+          user: req.user
 				});
 				
 			});
@@ -77,18 +78,18 @@ exports = module.exports = function(req, res) {
 		};
 		
 		if (req.method === 'POST' && req.body.action === 'updateItem' && !req.list.get('noedit')) {
-			
+
 			if (!keystone.security.csrf.validate(req)) {
 				console.error('CSRF failure', req.method, req.body);
-				req.flash('error', 'There was a problem with your request, please try again.');
+				req.flash('error', 'Det uppdtod ett problem, prova att ladda om sidan och försök igen.');
 				return renderView();
 			}
-			
+
 			item.getUpdateHandler(req).process(req.body, { flashErrors: true, logErrors: true }, function(err) {
 				if (err) {
 					return renderView();
 				}
-				req.flash('success', 'Your changes have been saved.');
+				req.flash('success', 'Dina ändringar är sparade.');
 				return res.redirect('/keystone/' + req.list.path + '/' + item.id);
 			});
 			

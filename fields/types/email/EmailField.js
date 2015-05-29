@@ -14,7 +14,7 @@ module.exports = Field.create({
 	renderValue: function() {
 		return this.props.value
 			? <a className="ui-related-item" href={'mailto:' + this.props.value}>{this.props.value}</a>
-			: <div className="help-block">(not set)</div>;
+			: <div className="help-block">(inte satt)</div>;
 	}
 	
 });

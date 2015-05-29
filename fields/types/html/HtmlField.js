@@ -88,13 +88,13 @@ module.exports = Field.create({
 	},
 
 	getOptions: function() {
-		var plugins = ['code', 'link'],
+		var plugins = ['link'],
 			options = _.defaults(
 				{},
 				this.props.wysiwyg,
 				Keystone.wysiwyg.options
 			),
-			toolbar = options.overrideToolbar ? '' : 'bold italic | alignleft aligncenter alignright | bullist numlist | outdent indent | link';
+			toolbar = options.overrideToolbar ? '' : 'bold italic | bullist numlist | link';
 
 		if (options.enableImages) {
 			plugins.push('image');
@@ -129,9 +129,9 @@ module.exports = Field.create({
 			_.extend(options.additionalOptions, importcssOptions);
 		}
 		
-		if (!options.overrideToolbar) {
-			toolbar += ' | code';
-		}
+		//if (!options.overrideToolbar) {
+			//toolbar += ' | code';
+		//}
 
 		var opts = {
 			selector: '#' + this.state.id,

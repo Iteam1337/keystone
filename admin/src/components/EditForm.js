@@ -62,7 +62,7 @@ var EditForm = React.createClass({
 			
 		} else {
 			return wrapNameField(
-				<h2 className="form-heading name-value">{this.props.data.name || '(no name)'}</h2>
+				<h2 className="form-heading name-value">{this.props.data.name || '(inget namn)'}</h2>
 			);
 		}
 	},
@@ -80,7 +80,7 @@ var EditForm = React.createClass({
 			if (data.createdAt) {
 				elements.createdAt = (
 					<div className="item-details-meta-item">
-						<span className="item-details-meta-label">Created</span>
+						<span className="item-details-meta-label">Skapad</span>
 						<span className="item-details-meta-info">{moment(data.createdAt).format('Do MMM YY h:mm:ssa')}</span>
 					</div>
 				);
@@ -90,7 +90,7 @@ var EditForm = React.createClass({
 		if (this.props.list.tracking.createdBy) {
 			data.createdBy = this.props.data.fields[this.props.list.tracking.createdBy];
 			if (data.createdBy) {
-				label = data.createdAt ? 'by' : 'Created by';
+				label = data.createdAt ? 'av' : 'Skapad av';
 				// todo: harden logic around user name
 				elements.createdBy = (
 					<div className="item-details-meta-item">
@@ -106,7 +106,7 @@ var EditForm = React.createClass({
 			if (data.updatedAt && (!data.createdAt || data.createdAt !== data.updatedAt)) {
 				elements.updatedAt = (
 					<div className="item-details-meta-item">
-						<span className="item-details-meta-label">Updated</span>
+						<span className="item-details-meta-label">Uppdaterad</span>
 						<span className="item-details-meta-info">{moment(data.updatedAt).format('Do MMM YY h:mm:ssa')}</span>
 					</div>
 				);
@@ -116,7 +116,7 @@ var EditForm = React.createClass({
 		if (this.props.list.tracking.updatedBy) {
 			data.updatedBy = this.props.data.fields[this.props.list.tracking.updatedBy];
 			if (data.updatedBy && (!data.createdBy || data.createdBy.id !== data.updatedBy.id || elements.updatedAt)) {
-				label = data.updatedAt ? 'by' : 'Created by';
+				label = data.updatedAt ? 'av' : 'Skapad av';
 				elements.updatedBy = (
 					<div className="item-details-meta-item">
 						<span className="item-details-meta-label">{label}</span>
@@ -172,18 +172,22 @@ var EditForm = React.createClass({
 	},
 	
 	renderToolbar: function() {
-		
+
 		var toolbar = {};
+
+    if (this.props.list.requireReview) {
+      toolbar.saveAndSubmit = <button name="readyForReview" value="true" type="submit" className="btn btn-save">Spara och skicka in för granskning</button>;
+    }
 		
 		if (!this.props.list.noedit) {
-			toolbar.save = <button type="submit" className="btn btn-save">Save</button>;
-			// TODO: Confirm: Use React & Modal
-			toolbar.reset = <a href={'/keystone/' + this.props.list.path + '/' + this.props.data.id} className="btn btn-link btn-cancel" data-confirm="Are you sure you want to reset your changes?">reset changes</a>;
+      toolbar.save = <button type="submit" className="btn btn-save">Spara</button>;
+      // TODO: Confirm: Use React & Modal
+      toolbar.reset = <a href={'/keystone/' + this.props.list.path + '/' + this.props.data.id} className="btn btn-link btn-cancel" data-confirm="Är du säker på att du vill ångra dina ändringar?">ångra ändringar</a>;
 		}
-		
+
 		if (!this.props.list.noedit && !this.props.list.nodelete) {
 			// TODO: Confirm: Use React & Modal
-			toolbar.del = <a href={'/keystone/' + this.props.list.path + '?delete=' + this.props.data.id + Keystone.csrf.query} className="btn btn-link btn-cancel delete" data-confirm={"Are you sure you want to delete this?" + this.props.list.singular.toLowerCase()}>delete {this.props.list.singular.toLowerCase()}</a>;
+			toolbar.del = <a href={'/keystone/' + this.props.list.path + '?delete=' + this.props.data.id + Keystone.csrf.query} className="btn btn-link btn-cancel delete" data-confirm={" äker på att du vill radera detta?" + this.props.list.singular.toLowerCase()}>radera {this.props.list.singular.toLowerCase()}</a>;
 		}
 		
 		return (
@@ -195,7 +199,6 @@ var EditForm = React.createClass({
 	},
 	
 	render: function() {
-		
 		return (
 			<form method="post" encType="multipart/form-data" className="item-details">
 				<input type="hidden" name="action" value="updateItem" />

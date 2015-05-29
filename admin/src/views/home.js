@@ -37,7 +37,7 @@ var View = React.createClass({
 					if (!Keystone.orphanedLists.length) return;
 					return (
 						<div className="nav-section">
-							<h4>Other</h4>
+							<h4>Annat</h4>
 							<ul>
 								{Keystone.orphanedLists.map((list) => {
 									return (
@@ -57,7 +57,7 @@ var View = React.createClass({
 	render: function() {
 		return (
 			<div>
-				<div className="page-header"><h1>Manage</h1></div>
+				<div className="page-header"><h1>Administrera</h1></div>
 				<div className="keystone-lists">{Keystone.nav.flat ? this.renderFlatNav() : this.renderGroupedNav()}</div>
 			</div>
 		);

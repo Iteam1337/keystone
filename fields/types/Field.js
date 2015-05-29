@@ -107,7 +107,7 @@ var Mixins = module.exports.Mixins = {
 				<div className={'field field-type-' + this.props.type}>
 					<div className="col-sm-12">
 						<label className="uncollapse">
-							<a href="javascript:;" onClick={this.uncollapse}>+ Add {this.props.label.toLowerCase()}</a>
+							<a href="javascript:;" onClick={this.uncollapse}>+ Lägg till {this.props.label.toLowerCase()}</a>
 						</label>
 					</div>
 				</div>
