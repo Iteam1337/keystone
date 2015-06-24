@@ -44,7 +44,7 @@
     "marked": "~0.3.3",
     "method-override": "~2.3.2",
     "moment": "~2.10.2",
-    "mongoose": "^4.0.2",
+    "mongoose": "^4.0.5",
     "morgan": "~1.5.2",
     "mpromise": "~0.5.5",
     "multer": "~0.1.8",

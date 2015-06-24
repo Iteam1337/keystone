@@ -133,12 +133,15 @@ module.exports = Field.create({
 			//toolbar += ' | code';
 		//}
 
+    plugins.push('paste');
+
 		var opts = {
 			selector: '#' + this.state.id,
 			toolbar:  toolbar,
 			plugins:  plugins,
 			menubar:  options.menubar || false,
-			skin:     options.skin || 'keystone'
+			skin:     options.skin || 'keystone',
+      paste_as_text: true
 		};
 
 		if (this.shouldRenderField()) {
