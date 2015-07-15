@@ -113,7 +113,7 @@ module.exports = Field.create({
 		return (
 			<div className="row">
 				<div className="col-sm-2 location-field-label">
-					<label className="text-muted">State/Postcode</label>
+					<label className="text-muted">Län/Postnummer</label>
 				</div>
 				<div className="col-sm-10 col-md-7 col-lg-6 location-field-controls"><div className="form-row">
 					<div className="col-xs-6">
@@ -162,15 +162,15 @@ module.exports = Field.create({
 		var replace = this.state.improve ? (
 			<label className="checkbox overwrite" htmlFor={this.props.paths.overwrite}>
 				<input type="checkbox" name={this.props.paths.overwrite} id={this.props.paths.overwrite} value="true" onChange={this.updateGoogleOption.bind(this, 'overwrite')} checked={this.state.overwrite} />
-				Replace existing data
+				Ersätt existerande data
 			</label>
 		) : null;
 		return (
 			<div className="row">
 				<div className="col-sm-9 col-md-10 col-sm-offset-3 col-md-offset-2 improve-options">
-					<label className="checkbox autoimprove" htmlFor={this.props.paths.improve} title="When checked, this will attempt to fill missing fields. It will also get the lat/long">
+					<label className="checkbox autoimprove" htmlFor={this.props.paths.improve} title="Försök fylla i saknade fält och hämta lat/long.">
 						<input type="checkbox" name={this.props.paths.improve} id={this.props.paths.improve} value="true" onChange={this.updateGoogleOption.bind(this, 'improve')} checked={this.state.improve} />
-						Autodetect and improve location on save
+						Förbättra resultatet automatiskt vid sparning
 					</label>
 					{replace}
 				</div>
@@ -190,20 +190,20 @@ module.exports = Field.create({
 		}
 		
 		var showMore = !_.isEmpty(this.state.collapsedFields)
-			? <a href="javascript:;" className="field-label-companion" onClick={this.uncollapseFields}>(show more fields)</a>
+			? <a href="javascript:;" className="field-label-companion" onClick={this.uncollapseFields}>(visa fler fält)</a>
 			: null;
 		
 		return <div className="field field-type-location">
 			<div className="field-ui">
 				<label>{this.props.label}</label>
 				{showMore}
-				{this.renderField('number', 'PO Box / Shop', true)}
-				{this.renderField('name', 'Building Name', true)}
-				{this.renderField('street1', 'Street Address')}
-				{this.renderField('street2', 'Street Address 2', true)}
-				{this.renderField('suburb', 'Suburb')}
+				{this.renderField('number', 'Box', true)}
+				{this.renderField('name', 'Namn', true)}
+				{this.renderField('street1', 'Adress')}
+				{this.renderField('street2', 'Adress rad 2', true)}
+				{this.renderField('suburb', 'Stad')}
 				{this.renderStateAndPostcode()}
-				{this.renderField('country', 'Country')}
+				{this.renderField('country', 'Land')}
 				{this.renderGeo()}
 				{this.renderGoogleOptions()}
 				<Note note={this.props.note} />
