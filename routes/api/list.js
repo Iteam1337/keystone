@@ -44,8 +44,15 @@ exports = module.exports = function(req, res) {
 				if (!field) return sendError('invalid field provided');
 
 				_.each(req.query.filters, function(value, key) {
-					query.where(key).equals(value ? value : null);
-					count.where(key).equals(value ? value : null);
+          if (_.isObject(value)) {
+            if (!req.user.isSuperUser) {
+              query.where(key)[value.method](req.user[value.array]);
+              count.where(key)[value.method](req.user[value.array]);
+            }
+          } else {
+            query.where(key).equals(value ? value : null);
+            count.where(key).equals(value ? value : null);
+          }
 				});
 			}
 			
