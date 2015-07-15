@@ -25,23 +25,6 @@ function pairarray(list, path, options) {
 
 util.inherits(pairarray, super_);
 
-//pairarray.prototype.addToSchema = function() {
-
-	//var schema = this.list.schema;
-
-	//var paths = this.paths = {
-		//first: this._path.append('.first'),
-		//second: this._path.append('.second')
-	//};
-
-	//schema.add({
-		//first: String,
-		//second: String
-	//}, this.path + '.');
-
-	//this.bindUnderscoreMethods();
-//};
-
 /**
  * Validates that a value for this field has been provided in a data object
  *
@@ -73,21 +56,13 @@ pairarray.prototype.validateInput = function(data, required, item) {
 
 pairarray.prototype.updateItem = function(item, data) {
 	var value = this.getValueFromData(data);
-	
-	if ('undefined' !== typeof value) {
-		if (value === null) {
-			value = [];
-		}
-		if ('string' === typeof value) {
-			value = [value];
-		}
-		if ('number' === typeof value) {
-			value = [value.toString()];
-		}
-		if ('object' === typeof value) {
-			item.set(this.path, _.values(value));
-		}
-	}
+	console.log(value);
+  if (value === null || 'undefined' === typeof value) {
+    value = [];
+  }
+  if ('object' === typeof value) {
+    item.set(this.path, _.values(value));
+  }
 };
 
 /*!
