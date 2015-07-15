@@ -60,11 +60,20 @@ exports = module.exports = function(req, res) {
 		// TODO: implement a more sophisticated way to filter for people to only see
 		// what they have created by themselves
 		if (req.user.isSuperUser != undefined && !req.user.isSuperUser) {
-			query.where('createdBy', req.user);
+      if (req.list.options.userFilterOn && req.list.options.track) {
+        query.or([
+          {'createdBy': req.user},
+          { 'belongsTo': { $in : req.user[req.list.options.userFilterOn] } }
+        ]);
+      } else if (req.list.options.userFilterOn && !req.list.options.track) {
+        query.in('belongsTo', req.user[req.list.options.userFilterOn]);
+      } else if (req.list.options.track) {
+        query.where('createdBy', req.user);
+      }
 		}
 		
 		req.list.selectColumns(query, columns);
-		
+
 		var link_to = function(params) {
 			var p = params.page || '';
 			delete params.page;
@@ -80,7 +89,7 @@ exports = module.exports = function(req, res) {
 		};
 		
 		query.exec(function(err, items) {
-			
+
 			if (err) {
 				console.log(err);
 				return res.status(500).send('Error querying items:<br><br>' + JSON.stringify(err));
@@ -95,6 +104,12 @@ exports = module.exports = function(req, res) {
 			if (req.query.search && items.total === 1 && items.results.length === 1) {
 				return res.redirect('/keystone/' + req.list.path + '/' + items.results[0].id);
 			}
+			
+      // go straight to the result if there was only one result and the list is
+      // nocreate
+      if (items.total === 1 && req.list.options.nocreate && items.results.length === 1) {
+				return res.redirect('/keystone/' + req.list.path + '/' + items.results[0].id);
+      }
 			
 			var download_link = '/keystone/download/' + req.list.path,
 				downloadParams = {};

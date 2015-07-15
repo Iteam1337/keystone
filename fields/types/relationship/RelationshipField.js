@@ -104,7 +104,12 @@ module.exports = Field.create({
 		var parts = [];
 		
 		_.each(filters, function (val, key) {
-			parts.push('filters[' + key + ']=' + encodeURIComponent(val));
+      if (_.isObject(val)) {
+        parts.push('filters[' + key + '][array]=' + encodeURIComponent(val.array));
+        parts.push('filters[' + key + '][method]=' + encodeURIComponent(val.method));
+      } else {
+        parts.push('filters[' + key + ']=' + encodeURIComponent(val));
+      }
 		});
 		
 		return parts.join('&');
