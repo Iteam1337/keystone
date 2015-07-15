@@ -40,9 +40,9 @@ html
 					ul.nav.navbar-nav
 						each navSection in nav.sections
 							if navSection.lists[0].external
-								- path = navSection.lists[0].path
+								- path = navSection.path
 							else
-								- path = '/keystone/' + navSection.lists[0].path
+								- path = '/keystone/' + navSection.path
 							if !navSection.invisible
 								li(class=section.key == navSection.key ? 'active' : null): a(href=path)= navSection.label
 			if section.lists && section.lists.length > 1
@@ -64,8 +64,8 @@ html
 									- path = navList.path
 								else
 									- path = '/keystone/' + navList.path
-									
-								li(class=navList.key == list.key ? 'active' : null): a(href=path)= navList.label
+								if !navList.invisible
+									li(class=navList.key == list.key ? 'active' : null): a(href=path)= navList.label
 			#body: .container
 				block intro
 				+flash-messages(messages)
