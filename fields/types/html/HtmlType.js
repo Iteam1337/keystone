@@ -20,8 +20,11 @@ function html(list, path, options) {
 	options.nofilter = true;
 	this.wysiwyg = options.wysiwyg || false;
 	this.height = options.height || 180;
+  this.enableImages = options.enableImages || false;
+  this.enableCloudinaryUploads = options.enableCloudinaryUploads || false;
+
 	
-	this._properties = ['wysiwyg', 'height'];
+	this._properties = ['wysiwyg', 'height', 'enableImages', 'enableCloudinaryUploads'];
 
 	html.super_.call(this, list, path, options);
 }

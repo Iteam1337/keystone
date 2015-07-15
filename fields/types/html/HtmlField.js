@@ -31,6 +31,14 @@ module.exports = Field.create({
 			editor.on('change', self.valueChanged);
 			editor.on('focus', self.focusChanged.bind(self, true));
 			editor.on('blur', self.focusChanged.bind(self, false));
+      editor.addButton('formath1', // name to add to toolbar button list
+      {
+        title : 'Rubrik', // tooltip text seen on mouseover
+        text : 'H',
+        onclick : function() {
+          editor.execCommand('FormatBlock', false, 'h4');
+        },
+      });
 		};
 
 		this._currentValue = this.props.value;
@@ -94,14 +102,14 @@ module.exports = Field.create({
 				this.props.wysiwyg,
 				Keystone.wysiwyg.options
 			),
-			toolbar = options.overrideToolbar ? '' : 'bold italic | bullist numlist | link';
+			toolbar = options.overrideToolbar ? '' : 'bold italic formath1 | bullist numlist | link';
 
-		if (options.enableImages) {
+		if (options.enableImages || this.props.enableImages) {
 			plugins.push('image');
 			toolbar += ' | image';
 		}
 
-		if (options.enableCloudinaryUploads) {
+		if (options.enableCloudinaryUploads || this.props.enableCloudinaryUploads) {
 			plugins.push('uploadimage');
 			toolbar += options.enableImages ? ' uploadimage' : ' | uploadimage';
 		}
