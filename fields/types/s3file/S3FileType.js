@@ -387,7 +387,7 @@ s3file.prototype.uploadFile = function(item, file, update, callback) {
 	var doUpload = function() {
 
 		if ('function' === typeof field.options.filename) {
-			filename = field.options.filename(item, filename);
+			filename = field.options.filename(item, file);
 		}
 
 		headers = field.generateHeaders(item, file, callback);
