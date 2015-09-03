@@ -191,6 +191,7 @@ exports = module.exports = function(req, res) {
 		
 	} else if (!req.list.get('nodelete') && req.query['delete']) {
 		
+    console.log("delete start");
 		if (!checkCSRF()) return renderView();
 		
 		if (req.query['delete'] === req.user.id) {
@@ -199,9 +200,11 @@ exports = module.exports = function(req, res) {
 		}
 		
 		req.list.model.findById(req.query['delete']).exec(function (err, item) {
+      console.log(item);
 			if (err || !item) return res.redirect('/keystone/' + req.list.path);
 			
 			item.remove(function (err) {
+        console.log(err);
 				if (err) {
 					console.log('Error deleting ' + req.list.singular);
 					console.log(err);
