@@ -37,6 +37,10 @@ module.exports = Field.create({
         text : 'H',
         onclick : function() {
           editor.execCommand('FormatBlock', false, 'h4');
+          var node = editor.contentDocument.getSelection().focusNode.parentNode;
+          if (node.nodeName === 'H4') {
+            node.className = 'content-subheader';
+          }
         },
       });
 		};
