@@ -251,7 +251,7 @@ module.exports = Field.create({
 		return <div key={this.props.path + '_toolbar'} className='image-toolbar'>
 			<div className='pull-left'>
 				<button type='button' onClick={this.changeImage} className='btn btn-default btn-upload-image'>
-					{this.hasImage() ? 'Ändra' : 'Ladda upp'} bild
+					{this.hasImage() ? 'Ändra' : 'Ladda upp'} fil
 				</button>
 				{this.hasImage() && this.renderClearButton()}
 			</div>
