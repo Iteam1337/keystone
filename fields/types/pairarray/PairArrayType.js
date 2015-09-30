@@ -56,7 +56,6 @@ pairarray.prototype.validateInput = function(data, required, item) {
 
 pairarray.prototype.updateItem = function(item, data) {
 	var value = this.getValueFromData(data);
-	console.log(value);
   if (value === null || 'undefined' === typeof value) {
     value = [];
   }
