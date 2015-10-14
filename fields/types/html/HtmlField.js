@@ -156,6 +156,10 @@ module.exports = Field.create({
       paste_as_text: true
 		};
 
+    if (this.props.enableHtmlPaste) {
+      opts.paste_as_text = false;
+    }
+
 		if (this.shouldRenderField()) {
 			opts.uploadimage_form_url = '/keystone/api/cloudinary/upload';
 		} else {

@@ -22,9 +22,10 @@ function html(list, path, options) {
 	this.height = options.height || 180;
   this.enableImages = options.enableImages || false;
   this.enableCloudinaryUploads = options.enableCloudinaryUploads || false;
+  this.enableHtmlPaste = options.enableHtmlPaste || false;
 
 	
-	this._properties = ['wysiwyg', 'height', 'enableImages', 'enableCloudinaryUploads'];
+	this._properties = ['wysiwyg', 'height', 'enableImages', 'enableCloudinaryUploads', 'enableHtmlPaste'];
 
 	html.super_.call(this, list, path, options);
 }
