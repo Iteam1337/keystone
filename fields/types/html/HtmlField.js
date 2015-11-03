@@ -153,7 +153,8 @@ module.exports = Field.create({
 			plugins:  plugins,
 			menubar:  options.menubar || false,
 			skin:     options.skin || 'keystone',
-      paste_as_text: true
+      paste_as_text: true,
+      relative_urls: false
 		};
 
     if (this.props.enableHtmlPaste) {
