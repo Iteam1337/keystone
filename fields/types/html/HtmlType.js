@@ -23,9 +23,10 @@ function html(list, path, options) {
   this.enableImages = options.enableImages || false;
   this.enableCloudinaryUploads = options.enableCloudinaryUploads || false;
   this.enableHtmlPaste = options.enableHtmlPaste || false;
+  this.enableTables = options.enableTables || false;
+  this.enableHtml = options.enableHtml || false;
 
-	
-	this._properties = ['wysiwyg', 'height', 'enableImages', 'enableCloudinaryUploads', 'enableHtmlPaste'];
+	this._properties = ['wysiwyg', 'height', 'enableImages', 'enableCloudinaryUploads', 'enableHtmlPaste', 'enableTables', 'enableHtml'];
 
 	html.super_.call(this, list, path, options);
 }

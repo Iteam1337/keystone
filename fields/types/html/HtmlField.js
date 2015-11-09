@@ -107,10 +107,21 @@ module.exports = Field.create({
 				Keystone.wysiwyg.options
 			),
 			toolbar = options.overrideToolbar ? '' : 'bold italic formath1 | bullist numlist | link';
+    console.log(this.props);
 
 		if (options.enableImages || this.props.enableImages) {
 			plugins.push('image');
 			toolbar += ' | image';
+		}
+
+		if (options.enableHtml || this.props.enableHtml) {
+			plugins.push('code');
+			toolbar += ' | code';
+		}
+
+		if (options.enableTables || this.props.enableTables) {
+			plugins.push('table');
+			toolbar += ' | table';
 		}
 
 		if (options.enableCloudinaryUploads || this.props.enableCloudinaryUploads) {
