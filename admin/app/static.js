@@ -1,7 +1,7 @@
 /**
  * Returns an Express Router with bindings for the Admin UI static resources,
  * i.e files, less and browserified scripts.
- * 
+ *
  * Should be included before other middleware (e.g. session management,
  * logging, etc) for reduced overhead.
  */
@@ -15,9 +15,21 @@ var router = express.Router();
 
 router.use('/styles', require('less-middleware')(__dirname + '../../../public/styles'));
 router.use(express.static(__dirname + '../../../public'));
-router.use('/js', browserify(__dirname + '../../../admin/src/views', {
-	external: packages,
-	transform: [babelify]
-}));
+
+function browserify(path) {
+	router.use('/js', browserify(__dirname + '../../../admin/src/views', {
+		external: packages,
+		transform: [babelify]
+	}));
+}
+
+try {
+	browserify('../../../admin/src/views')
+} catch (e) {
+	console.log('browserify(...) error', e)
+	console.log('Attempting fail-safe override...')
+	
+	browserify('/../../admin/src/views')
+}
 
 module.exports = router;
