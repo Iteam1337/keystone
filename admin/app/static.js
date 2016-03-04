@@ -16,7 +16,7 @@ var router = express.Router();
 router.use('/styles', require('less-middleware')(__dirname + '../../../public/styles'));
 router.use(express.static(__dirname + '../../../public'));
 
-function browserify(path) {
+function doBrowserify(path) {
 	router.use('/js', browserify(__dirname + '../../../admin/src/views', {
 		external: packages,
 		transform: [babelify]
@@ -24,12 +24,12 @@ function browserify(path) {
 }
 
 try {
-	browserify('../../../admin/src/views')
+	doBrowserify('../../../admin/src/views')
 } catch (e) {
 	console.log('browserify(...) error', e)
 	console.log('Attempting fail-safe override...')
-	
-	browserify('/../../admin/src/views')
+
+	doBrowserify('/../../admin/src/views')
 }
 
 module.exports = router;
