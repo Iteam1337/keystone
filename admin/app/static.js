@@ -17,7 +17,7 @@ router.use('/styles', require('less-middleware')(__dirname + '../../../public/st
 router.use(express.static(__dirname + '../../../public'));
 
 function doBrowserify(path) {
-	router.use('/js', browserify(__dirname + '../../../admin/src/views', {
+	router.use('/js', browserify(__dirname + path, {
 		external: packages,
 		transform: [babelify]
 	}));
