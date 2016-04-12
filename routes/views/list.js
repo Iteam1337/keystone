@@ -57,16 +57,22 @@ exports = module.exports = function(req, res) {
 
 		var query = req.list.paginate({ filters: queryFilters, page: req.params.page, perPage: req.list.get('perPage') }).sort(sort.by);
 
-		// TODO: implement a more sophisticated way to filter for people to only see
-		// what they have created by themselves
+    var doApplyFilters = true;
+    var adminAccessOverride = keystone.get('unfilteredAdminAccess')
 
-    var requestForArticlesAsTidskriftAdmin = req.user.isTidskriftAdmin && req.params.list === 'artiklar';
-		var requestForTidskriftAsTidskriftAdmin = req.user.isTidskriftAdmin && req.params.list === 'tidskrift';
-		var requestForTidskriftUndersidaAsTidskriftAdmin = req.user.isTidskriftAdmin && req.params.list === 'tidskriftundersida';
-		var isNotSuperUser = req.user.isSuperUser != undefined && !req.user.isSuperUser;
+    Object.keys(adminAccessOverride).map(function (hasAdminRole) {
+      if (req.user[hasAdminRole] && adminAccessOverride[hasAdminRole].indexOf(req.params.list) > -1) {
+        doApplyFilters = false;
+      }
+    })
 
-		if (isNotSuperUser && !requestForTidskriftAsTidskriftAdmin && !requestForTidskriftUndersidaAsTidskriftAdmin) {
-      if (requestForArticlesAsTidskriftAdmin) {
+    if (req.user.isSuperUser) {
+      // Never apply filter if SuperUser.
+      doApplyFilters = false;
+    }
+
+    if (doApplyFilters) {
+      if (req.user.isTidskriftAdmin && req.params.list === 'artiklar') {
         query.where('tagsPlain').all([/Tidskriften allmänmedicin/i])
       } else if (req.list.options.userFilterOn && req.list.options.track) {
         query.or([
@@ -78,7 +84,7 @@ exports = module.exports = function(req, res) {
       } else if (req.list.options.track) {
         query.where('createdBy', req.user);
       }
-		}
+    }
 
 		req.list.selectColumns(query, columns);
 
