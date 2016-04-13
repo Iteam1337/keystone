@@ -72,9 +72,7 @@ exports = module.exports = function(req, res) {
     }
 
     if (doApplyFilters) {
-      if (req.user.isTidskriftAdmin && req.params.list === 'artiklar') {
-        query.where('tagsPlain').all([/Tidskriften allmänmedicin/i])
-      } else if (req.list.options.userFilterOn && req.list.options.track) {
+      if (req.list.options.userFilterOn && req.list.options.track) {
         query.or([
           {'createdBy': req.user},
           { 'belongsTo': { $in : req.user[req.list.options.userFilterOn] } }
