@@ -58,13 +58,13 @@ exports = module.exports = function(req, res) {
 		var query = req.list.paginate({ filters: queryFilters, page: req.params.page, perPage: req.list.get('perPage') }).sort(sort.by);
 
     var doApplyFilters = true;
-    var adminAccessOverride = keystone.get('unfilteredAdminAccess')
+    var adminAccessOverride = keystone.get('unfilteredAdminAccess');
 
     Object.keys(adminAccessOverride).map(function (hasAdminRole) {
       if (req.user[hasAdminRole] && adminAccessOverride[hasAdminRole].indexOf(req.params.list) > -1) {
         doApplyFilters = false;
       }
-    })
+    });
 
     if (req.user.isSuperUser) {
       // Never apply filter if SuperUser.
@@ -117,7 +117,6 @@ exports = module.exports = function(req, res) {
 				return res.redirect('/keystone/' + req.list.path + '/' + items.results[0].id);
 			}
 
-<<<<<<< HEAD:routes/views/list.js
       // go straight to the result if there was only one result and the list is
       // nocreate
       if (items.total === 1 && req.list.options.nocreate && items.results.length === 1) {
@@ -126,10 +125,6 @@ exports = module.exports = function(req, res) {
 
 			var download_link = '/keystone/download/' + req.list.path,
 				downloadParams = {};
-=======
-			var download_link = '/keystone/download/' + req.list.path;
-			var downloadParams = {};
->>>>>>> tags/v0.3.21:admin/routes/views/list.js
 
 			if (req.query.q) {
 				downloadParams.q = req.query.q;
@@ -205,31 +200,16 @@ exports = module.exports = function(req, res) {
 				res.redirect('/keystone/' + req.list.path);
 			});
 		})();
-
-<<<<<<< HEAD:routes/views/list.js
-	} else if (!req.list.get('nodelete') && req.query['delete']) {
-
-    console.log("delete start");
-		if (!checkCSRF()) return renderView();
-
-		if (req.query['delete'] === req.user.id) {
-=======
 	} else if (!req.list.get('nodelete') && req.query['delete']) { //eslint-disable-line dot-notation
 
 		if (!checkCSRF()) return renderView();
 
 		if (req.query['delete'] === req.user.id) { //eslint-disable-line dot-notation
->>>>>>> tags/v0.3.21:admin/routes/views/list.js
 			req.flash('error', 'You can\'t delete your own ' + req.list.singular + '.');
 			return renderView();
 		}
 
-<<<<<<< HEAD:routes/views/list.js
-		req.list.model.findById(req.query['delete']).exec(function (err, item) {
-      console.log(item);
-=======
 		req.list.model.findById(req.query['delete']).exec(function (err, item) { //eslint-disable-line dot-notation
->>>>>>> tags/v0.3.21:admin/routes/views/list.js
 			if (err || !item) return res.redirect('/keystone/' + req.list.path);
 
 			item.remove(function (err) {
