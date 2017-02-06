@@ -1,21 +1,21 @@
 var _ = require('underscore'),
 	moment = require('moment'),
 	React = require('react'),
-	Fields = require('../fields'),
+	Fields = require('FieldTypes'),
 	FormHeading = require('./FormHeading'),
 	Toolbar = require('./Toolbar'),
 	InvalidFieldType = require('./InvalidFieldType');
 
 var EditForm = React.createClass({
-	
+
 	displayName: 'EditForm',
-	
+
 	getInitialState: function() {
 		return {
 			values: _.clone(this.props.data.fields)
 		};
 	},
-	
+
 	getFieldProps: function(field) {
 		var props = _.clone(field);
 		props.value = this.state.values[field.path];
@@ -24,7 +24,7 @@ var EditForm = React.createClass({
 		props.mode = 'edit';
 		return props;
 	},
-	
+
 	handleChange: function(event) {
 		var values = this.state.values;
 		values[event.path] = event.value;
@@ -32,13 +32,12 @@ var EditForm = React.createClass({
 			values: values
 		});
 	},
-	
+
 	renderNameField: function() {
-		
-		var namePath = this.props.list.namePath,
-			nameField = this.props.list.nameField,
+
+		var nameField = this.props.list.nameField,
 			nameIsEditable = this.props.list.nameIsEditable;
-		
+
 		function wrapNameField(field) {
 			return (
 				<div className="field item-name">
@@ -48,33 +47,33 @@ var EditForm = React.createClass({
 				</div>
 			);
 		}
-		
+
 		if (nameIsEditable) {
-			
+
 			var nameFieldProps = this.getFieldProps(nameField);
 			nameFieldProps.className = 'item-name-field';
 			nameFieldProps.placeholder = nameField.label;
 			nameFieldProps.label = false;
-			
+
 			return wrapNameField(
 				React.createElement(Fields[nameField.type], nameFieldProps)
 			);
-			
+
 		} else {
 			return wrapNameField(
 				<h2 className="form-heading name-value">{this.props.data.name || '(inget namn)'}</h2>
 			);
 		}
 	},
-	
+
 	renderTrackingMeta: function() {
-		
+
 		if (!this.props.list.tracking) return null;
-		
+
 		var elements = {},
 			data = {},
 			label;
-		
+
 		if (this.props.list.tracking.createdAt) {
 			data.createdAt = this.props.data.fields[this.props.list.tracking.createdAt];
 			if (data.createdAt) {
@@ -86,7 +85,7 @@ var EditForm = React.createClass({
 				);
 			}
 		}
-		
+
 		if (this.props.list.tracking.createdBy) {
 			data.createdBy = this.props.data.fields[this.props.list.tracking.createdBy];
 			if (data.createdBy) {
@@ -100,7 +99,7 @@ var EditForm = React.createClass({
 				);
 			}
 		}
-		
+
 		if (this.props.list.tracking.updatedAt) {
 			data.updatedAt = this.props.data.fields[this.props.list.tracking.updatedAt];
 			if (data.updatedAt && (!data.createdAt || data.createdAt !== data.updatedAt)) {
@@ -112,7 +111,7 @@ var EditForm = React.createClass({
 				);
 			}
 		}
-		
+
 		if (this.props.list.tracking.updatedBy) {
 			data.updatedBy = this.props.data.fields[this.props.list.tracking.updatedBy];
 			if (data.updatedBy && (!data.createdBy || data.createdBy.id !== data.updatedBy.id || elements.updatedAt)) {
@@ -125,26 +124,26 @@ var EditForm = React.createClass({
 				);
 			}
 		}
-		
+
 		return Object.keys(elements).length ? <div className="item-details-meta">{elements}</div> : null;
-		
+
 	},
-	
+
 	renderFormElements: function() {
-		
+
 		var elements = {},
 			headings = 0;
-		
+
 		_.each(this.props.list.uiElements, function(el) {
-			
+
 			if (el.type === 'heading') {
-				
+
 				headings++;
 				el.options.values = this.state.values;
 				elements['h-' + headings] = React.createElement(FormHeading, el);
-				
+
 			} else if (el.type === 'field') {
-				
+
 				var field = this.props.list.fields[el.field],
 					props = this.getFieldProps(field);
 
@@ -162,15 +161,15 @@ var EditForm = React.createClass({
 				}
 
 				elements[field.path] = React.createElement(Fields[field.type], props);
-				
+
 			}
-			
+
 		}, this);
-		
+
 		return elements;
-		
+
 	},
-	
+
 	renderToolbar: function() {
 
 		var toolbar = {};
@@ -178,7 +177,7 @@ var EditForm = React.createClass({
     if (this.props.list.requireReview) {
       toolbar.saveAndSubmit = <button name="readyForReview" value="true" type="submit" className="btn btn-save">Spara och skicka in för granskning</button>;
     }
-		
+
 		if (!this.props.list.noedit) {
       toolbar.save = <button type="submit" className="btn btn-save">Spara</button>;
       // TODO: Confirm: Use React & Modal
@@ -187,17 +186,17 @@ var EditForm = React.createClass({
 
 		if (!this.props.list.noedit && !this.props.list.nodelete) {
 			// TODO: Confirm: Use React & Modal
-			toolbar.del = <a href={'/keystone/' + this.props.list.path + '?delete=' + this.props.data.id + Keystone.csrf.query} className="btn btn-link btn-cancel delete" data-confirm={" äker på att du vill radera detta?" + this.props.list.singular.toLowerCase()}>radera {this.props.list.singular.toLowerCase()}</a>;
+			toolbar.del = <a href={'/keystone/' + this.props.list.path + '?delete=' + this.props.data.id + Keystone.csrf.query} className="btn btn-link btn-cancel delete" data-confirm={'Säker på att du vill radera detta?' + this.props.list.singular.toLowerCase()}>radera {this.props.list.singular.toLowerCase()}</a>;
 		}
-		
+
 		return (
 			<Toolbar className="toolbar">
 				{toolbar}
 			</Toolbar>
 		);
-		
+
 	},
-	
+
 	render: function() {
 		return (
 			<form method="post" encType="multipart/form-data" className="item-details">
@@ -210,7 +209,7 @@ var EditForm = React.createClass({
 			</form>
 		);
 	}
-	
+
 });
 
 module.exports = EditForm;

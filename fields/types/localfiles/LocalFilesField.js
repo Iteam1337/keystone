@@ -1,5 +1,4 @@
-var _     = require('underscore'),
-	$	  = require('jquery'),
+var _ = require('underscore'),
 	bytes = require('bytes'),
 	React = require('react'),
 	Field = require('../Field');
@@ -151,18 +150,20 @@ module.exports = Field.create({
 	},
 
 	renderContainer: function () {
-		return <div className='files-container clearfix'>
-			{this.state.items}
-		</div>;
+		return ( 
+			<div className='files-container clearfix'>
+				{this.state.items}
+			</div>
+		);
 	},
 
 	renderFieldAction: function () {
 		var value = '';
 		var remove = [];
 		_.each(this.state.items, function (thumb) {
-			if (thumb && thumb.props.deleted) remove.push(thumb.props.public_id);
+			if (thumb && thumb.props.deleted) remove.push(thumb.props._id);
 		});
-		if (remove.length) value = 'remove:' + remove.join(',');
+		if (remove.length) value = 'delete:' + remove.join(',');
 
 		return <input ref="action" className="field-action" type="hidden" value={value} name={this.props.paths.action} />;
 	},

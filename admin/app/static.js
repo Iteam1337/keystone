@@ -6,40 +6,49 @@
  * logging, etc) for reduced overhead.
  */
 
-var babelify = require('babelify');
-var browserify = require('browserify-middleware');
-var debug = require('debug')('keystone:admin:app:static');
+var browserify = require('./browserify');
 var express = require('express');
-var packages = require('../packages');
+var less = require('less-middleware');
+var path = require('path');
 var router = express.Router();
 var main = require('path').dirname(require.main.filename);
 var fs = require('fs');
 
-var root;
+/* Prepare browserify bundles */
 
-try {
-	fs.accessSync(`${main}/admin/src`, fs.F_OK);
-	root = `${main}`;
-} catch (_error) {
-	fs.accessSync(`${__dirname}/../../admin/src`, fs.F_OK);
-	root = require('path').normalize(`${__dirname}/../..`);
-}
+var bundles = {
+	fields: browserify('fields.js', 'FieldTypes'),
+	home: browserify('views/home.js'),
+	item: browserify('views/item.js'),
+	list: browserify('views/list.js')
+};
 
-router.use('/styles', require('less-middleware')(`${root}/public/styles`));
-router.use(express.static(`${root}/public`));
+router.prebuild = function() {
+	bundles.fields.build();
+	bundles.home.build();
+	bundles.item.build();
+	bundles.list.build();
+};
 
-function doBrowserify (path) {
-	router.use('/js', browserify(`${root}/${path}`, {
-		external: packages,
-		transform: [babelify]
-	}));
-}
+/* Prepare LESS options */
 
-try {
-	doBrowserify('src/views');
-} catch (_e) {
-	console.log('Attempting fail-safe override...');
-	doBrowserify('admin/src/views');
-}
+var reactSelectPath = path.join(path.dirname(require.resolve('react-select')), '..');
+
+var lessOptions = {
+	render: {
+		modifyVars: {
+			reactSelectPath: JSON.stringify(reactSelectPath)
+		}
+	}
+};
+
+/* Configure router */
+
+router.use('/styles', less(path.join(__dirname, '../public/styles'), lessOptions));
+router.use(express.static(path.join(__dirname, '../public')));
+router.get('/js/fields.js', bundles.fields.serve);
+router.get('/js/home.js', bundles.home.serve);
+router.get('/js/item.js', bundles.item.serve);
+router.get('/js/list.js', bundles.list.serve);
 
 module.exports = router;

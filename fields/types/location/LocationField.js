@@ -9,9 +9,9 @@ var _ = require('underscore'),
 	Note = require('../../components/Note');
 
 module.exports = Field.create({
-	
+
 	displayName: 'LocationField',
-	
+
 	getInitialState: function() {
 		return {
 			collapsedFields: {},
@@ -19,39 +19,39 @@ module.exports = Field.create({
 			overwrite: false
 		};
 	},
-	
+
 	componentWillMount: function() {
-		
+
 		var collapsedFields = {};
-		
+
 		_.each(['number', 'name', 'street2', 'geo'], function(i) {
 			if (!this.props.value[i]) {
 				collapsedFields[i] = true;
 			}
 		}, this);
-		
+
 		this.setState({
 			collapsedFields: collapsedFields
 		});
-		
+
 	},
-	
+
 	componentDidUpdate: function(prevProps, prevState) {
 		if (prevState.fieldsCollapsed && !this.state.fieldsCollapsed) {
 			this.refs.number.getDOMNode().focus();
 		}
 	},
-	
+
 	shouldCollapse: function() {
 		return this.formatValue() ? false : true;
 	},
-	
+
 	uncollapseFields: function() {
 		this.setState({
 			collapsedFields: {}
 		});
 	},
-	
+
 	fieldChanged: function(path, event) {
 		var value = this.props.value;
 		value[path] = event.target.value;
@@ -60,7 +60,7 @@ module.exports = Field.create({
 			value: value
 		});
 	},
-	
+
 	geoChanged: function(i, event) {
 		var value = this.props.value;
 		if (!value.geo) {
@@ -72,7 +72,7 @@ module.exports = Field.create({
 			value: value
 		});
 	},
-	
+
 	formatValue: function() {
 		return _.compact([
 			this.props.value.number,
@@ -85,17 +85,17 @@ module.exports = Field.create({
 			this.props.value.country
 		]).join(', ');
 	},
-	
+
 	renderValue: function() {
 		return <div className="field-value">{this.formatValue() || '(no value)'}</div>;
 	},
-	
-	renderField: function(path, label, collapse) {
-		
+
+	renderField: function(path, label, collapse) {//eslint-disable-line no-unused-vars
+
 		if (this.state.collapsedFields[path]) {
 			return null;
 		}
-		
+
 		return (
 			<div className="row">
 				<div className="col-sm-2 location-field-label">
@@ -106,9 +106,9 @@ module.exports = Field.create({
 				</div>
 			</div>
 		);
-		
+
 	},
-	
+
 	renderStateAndPostcode: function() {
 		return (
 			<div className="row">
@@ -126,37 +126,37 @@ module.exports = Field.create({
 			</div>
 		);
 	},
-	
+
 	renderGeo: function() {
-		
+
 		if (this.state.collapsedFields.geo) {
 			return null;
 		}
-		
+
 		return (
 			<div className="row">
 				<div className="col-sm-2 location-field-label">
-					<label className="text-muted">Lng / Lat</label>
+					<label className="text-muted">Lat / Lng</label>
 				</div>
 				<div className="col-sm-10 col-md-7 col-lg-6 location-field-controls"><div className="form-row">
 					<div className="col-xs-6">
-						<input type="text" name={this.props.paths.geo} ref="geo0" value={this.props.value.geo ? this.props.value.geo[0] : ''} onChange={this.geoChanged.bind(this, 0)} placeholder="Longitude" className="form-control" />
+						<input type="text" name={this.props.paths.geo + '[1]'} ref="geo1" value={this.props.value.geo ? this.props.value.geo[1] : ''} onChange={this.geoChanged.bind(this, 1)} placeholder="Latitude" className="form-control" />
 					</div>
 					<div className="col-xs-6">
-						<input type="text" name={this.props.paths.geo} ref="geo1" value={this.props.value.geo ? this.props.value.geo[1] : ''} onChange={this.geoChanged.bind(this, 1)} placeholder="Latitude" className="form-control" />
+						<input type="text" name={this.props.paths.geo + '[0]'} ref="geo0" value={this.props.value.geo ? this.props.value.geo[0] : ''} onChange={this.geoChanged.bind(this, 0)} placeholder="Longitude" className="form-control" />
 					</div>
 				</div></div>
 			</div>
 		);
-		
+
 	},
-	
+
 	updateGoogleOption: function(key, e) {
 		var newState = {};
 		newState[key] = e.target.checked;
 		this.setState(newState);
 	},
-	
+
 	renderGoogleOptions: function() {
 		if (!this.props.enableMapsAPI) return null;
 		var replace = this.state.improve ? (
@@ -177,39 +177,45 @@ module.exports = Field.create({
 			</div>
 		);
 	},
-	
+
 	renderUI: function() {
-		
+
 		if (!this.shouldRenderField()) {
-			return <div className="field field-type-location">
-				<label className="field-label">{this.props.label}</label>
-				<div className="field-ui noedit">
-					{this.renderValue()}
+			return (
+				<div className="field field-type-location">
+					<label className="field-label">{this.props.label}</label>
+					<div className="field-ui noedit">
+						{this.renderValue()}
+					</div>
 				</div>
-			</div>;
+			);
 		}
-		
+
+		/* eslint-disable no-script-url */
 		var showMore = !_.isEmpty(this.state.collapsedFields)
 			? <a href="javascript:;" className="field-label-companion" onClick={this.uncollapseFields}>(visa fler fält)</a>
 			: null;
+		/* eslint-enable */
 		
-		return <div className="field field-type-location">
-			<div className="field-ui">
-				<label>{this.props.label}</label>
-				{showMore}
-				{this.renderField('number', 'Box', true)}
-				{this.renderField('name', 'Namn', true)}
-				{this.renderField('street1', 'Adress')}
-				{this.renderField('street2', 'Adress rad 2', true)}
-				{this.renderField('suburb', 'Stad')}
-				{this.renderStateAndPostcode()}
-				{this.renderField('country', 'Land')}
-				{this.renderGeo()}
-				{this.renderGoogleOptions()}
-				<Note note={this.props.note} />
+		return (
+			<div className="field field-type-location">
+				<div className="field-ui">
+					<label>{this.props.label}</label>
+					{showMore}
+					{this.renderField('number', 'Box', true)}
+					{this.renderField('name', 'Namn', true)}
+					{this.renderField('street1', 'Adress')}
+					{this.renderField('street2', 'Adress rad 2', true)}
+					{this.renderField('suburb', 'Stad')}
+					{this.renderStateAndPostcode()}
+					{this.renderField('country', 'Land')}
+					{this.renderGeo()}
+					{this.renderGoogleOptions()}
+					<Note note={this.props.note} />
+				</div>
 			</div>
-		</div>;
-		
+		);
+
 	}
-	
+
 });

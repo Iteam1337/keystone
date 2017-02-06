@@ -5,10 +5,10 @@ var _ = require('underscore'),
 	Note = require('../../components/Note'),
 	Select = require('react-select');
 
-var SUPPORTED_TYPES = ['image/gif', 'image/png', 'image/jpeg', 'image/bmp', 'image/x-icon', 'application/pdf', 'image/x-tiff', 'image/x-tiff', 'application/postscript', 'image/vnd.adobe.photoshop'];
+var SUPPORTED_TYPES = ['image/gif', 'image/png', 'image/jpeg', 'image/bmp', 'image/x-icon', 'application/pdf', 'image/x-tiff', 'image/x-tiff', 'application/postscript', 'image/vnd.adobe.photoshop', 'image/svg+xml'];
 
 module.exports = Field.create({
-	
+
 	displayName: 'CloudinaryImageField',
 
 	fileFieldNode: function() {
@@ -163,7 +163,7 @@ module.exports = Field.create({
 	},
 
 	renderImagePreviewThumbnail: function() {
-		return <img key={this.props.path + '_preview_thumbnail'} className='img-load' style={ { height: '90' } } src={this.getImageSource()} />;
+		return <img key={this.props.path + '_preview_thumbnail'} className='img-load' style={{ height: '90' }} src={this.getImageSource()} />;
 	},
 
 	/**
@@ -174,16 +174,20 @@ module.exports = Field.create({
 		var values = null;
 
 		if (!this.hasLocal() && !this.state.removeExisting) {
-			values = <div className='image-values'>
-				<div className='field-value'>{this.props.value.url}</div>
-				{this.renderImageDimensions()}
-			</div>;
+			values = (
+				<div className='image-values'>
+					<div className='field-value'>{this.props.value.url}</div>
+					{this.renderImageDimensions()}
+				</div>
+			);
 		}
 
-		return <div key={this.props.path + '_details'} className='image-details'>
-			{values}
-			{add}
-		</div>;
+		return (
+			<div key={this.props.path + '_details'} className='image-details'>
+				{values}
+				{add}
+			</div>
+		);
 	},
 
 	renderImageDimensions: function() {
@@ -192,24 +196,30 @@ module.exports = Field.create({
 
 	/**
 	 * Render an alert.
-	 * 
+	 *
 	 *  - On a local file, output a "to be uploaded" message.
 	 *  - On a cloudinary file, output a "from cloudinary" message.
 	 *  - On removal of existing file, output a "save to remove" message.
 	 */
 	renderAlert: function() {
 		if (this.hasLocal()) {
-			return <div className='upload-queued pull-left'>
-				<div className='alert alert-success'>Bild vald - spara för att ladda upp</div>
-			</div>;
+			return (
+				<div className='upload-queued pull-left'>
+					<div className='alert alert-success'>Bild vald - spara för att ladda upp</div>
+				</div>
+			);
 		} else if (this.state.origin === 'cloudinary') {
-			return <div className='select-queued pull-left'>
-				<div className='alert alert-success'>Bild vald från servern</div>
-			</div>;
+			return (
+				<div className='select-queued pull-left'>
+					<div className='alert alert-success'>Bild vald från servern</div>
+				</div>
+			);
 		} else if (this.state.removeExisting) {
-			return <div className='delete-queued pull-left'>
-				<div className='alert alert-danger'>Bild {this.props.autoCleanup ? 'raderad' : 'borttagen'} - spara för att bekräfta</div>
-			</div>;
+			return (
+				<div className='delete-queued pull-left'>
+					<div className='alert alert-danger'>Bild {this.props.autoCleanup ? 'raderad' : 'borttagen'} - spara för att bekräfta</div>
+				</div>
+			);
 		} else {
 			return null;
 		}
@@ -223,9 +233,11 @@ module.exports = Field.create({
 	 */
 	renderClearButton: function() {
 		if (this.state.removeExisting) {
-			return <button type='button' className='btn btn-link btn-cancel btn-undo-image' onClick={this.undoRemove}>
-				Ånga borttagning
-			</button>;
+			return (
+				<button type='button' className='btn btn-link btn-cancel btn-undo-image' onClick={this.undoRemove}>
+					Ånga borttagning
+				</button>
+			);
 		} else {
 			var clearText;
 			if (this.hasLocal()) {
@@ -233,9 +245,11 @@ module.exports = Field.create({
 			} else {
 				clearText = (this.props.autoCleanup ? 'Radera bild' : 'Ta bort bild');
 			}
-			return <button type='button' className='btn btn-link btn-cancel btn-delete-image' onClick={this.removeImage}>
-				{clearText}
-			</button>;
+			return (
+				<button type='button' className='btn btn-link btn-cancel btn-delete-image' onClick={this.removeImage}>
+					{clearText}
+				</button>
+			);
 		}
 	},
 
@@ -248,24 +262,28 @@ module.exports = Field.create({
 	},
 
 	renderImageToolbar: function() {
-		return <div key={this.props.path + '_toolbar'} className='image-toolbar'>
-			<div className='pull-left'>
-				<button type='button' onClick={this.changeImage} className='btn btn-default btn-upload-image'>
-					{this.hasImage() ? 'Ändra' : 'Ladda upp'} fil
-				</button>
-				{this.hasImage() && this.renderClearButton()}
+		return (
+			<div key={this.props.path + '_toolbar'} className='image-toolbar'>
+				<div className='pull-left'>
+					<button type='button' onClick={this.changeImage} className='btn btn-default btn-upload-image'>
+						{this.hasImage() ? 'Ändra' : 'Ladda upp'} Image
+					</button>
+					{this.hasImage() && this.renderClearButton()}
+				</div>
+				{this.props.select && this.renderImageSelect()}
 			</div>
-			{this.props.select && this.renderImageSelect()}
-		</div>;
+		);
 	},
 
 	renderImageSelect: function() {
+		var selectPrefix = this.props.selectPrefix;
 		var getOptions = function(input, callback) {
 			$.get('/keystone/api/cloudinary/autocomplete', {
 				dataType: 'json',
 				data: {
 					q: input
-				}
+				},
+				prefix: selectPrefix
 			}, function (data) {
 				var options = [];
 
@@ -283,15 +301,17 @@ module.exports = Field.create({
 			});
 		};
 
-		return <div className='image-select'>
-			<Select
-				placeholder='Sök efter en bild på servern'
-				className='ui-select2-cloudinary'
-				name={this.props.paths.select}
-				id={'field_' + this.props.paths.select}
-				asyncOptions={getOptions}
-			/>
-		</div>;
+		return (
+			<div className='image-select'>
+				<Select
+					placeholder='Sök efter en bild på servern ...'
+					className='ui-select2-cloudinary'
+					name={this.props.paths.select}
+					id={'field_' + this.props.paths.select}
+					asyncOptions={getOptions}
+				/>
+			</div>
+		);
 	},
 
 	renderUI: function() {
@@ -320,17 +340,19 @@ module.exports = Field.create({
 			}
 		}
 
-		return <div className='field field-type-cloudinaryimage'>
-			<label className='field-label'>{this.props.label}</label>
+		return (
+			<div className='field field-type-cloudinaryimage'>
+				<label className='field-label'>{this.props.label}</label>
 
-			{this.renderFileField()}
-			{this.renderFileAction()}
+				{this.renderFileField()}
+				{this.renderFileAction()}
 
-			<div className={fieldClassName}>
-				<div className='image-container'>{container}</div>
-				{body}
-				<Note note={this.props.note} />
+				<div className={fieldClassName}>
+					<div className='image-container'>{container}</div>
+					{body}
+					<Note note={this.props.note} />
+				</div>
 			</div>
-		</div>;
+		);
 	}
 });

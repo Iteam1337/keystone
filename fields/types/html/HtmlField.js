@@ -10,9 +10,9 @@ function getId() {
 }
 
 module.exports = Field.create({
-	
+
 	displayName: 'HtmlField',
-	
+
 	getInitialState: function() {
 		return {
 			id: getId(),
@@ -53,12 +53,12 @@ module.exports = Field.create({
 		if (prevState.isCollapsed && !this.state.isCollapsed) {
 			this.initWysiwyg();
 		}
-		
+
 		if (_.isEqual(this.props.dependsOn, this.props.currentDependencies)
 			&& !_.isEqual(this.props.currentDependencies, prevProps.currentDependencies)) {
 			var instance = tinymce.get(prevState.id);
 			if (instance) {
-				tinymce.EditorManager.execCommand('mceRemoveEditor', true, prevState.id)
+				tinymce.EditorManager.execCommand('mceRemoveEditor', true, prevState.id);
 				this.initWysiwyg();
 			} else {
 				this.initWysiwyg();
@@ -69,13 +69,13 @@ module.exports = Field.create({
 	componentDidMount: function() {
 		this.initWysiwyg();
 	},
-	
+
 	componentWillReceiveProps: function(nextProps) {
 		if (this.editor && this._currentValue !== nextProps.value) {
 			this.editor.setContent(nextProps.value);
 		}
 	},
-	
+
 	focusChanged: function(focused) {
 		this.setState({
 			isFocused: focused
@@ -106,8 +106,8 @@ module.exports = Field.create({
 				this.props.wysiwyg,
 				Keystone.wysiwyg.options
 			),
-			toolbar = options.overrideToolbar ? '' : 'bold italic formath1 | bullist numlist | link';
-    console.log(this.props);
+			toolbar = options.overrideToolbar ? '' : 'bold italic formath1 | alignleft aligncenter alignright | bullist numlist | outdent indent | link',
+			i;
 
 		if (options.enableImages || this.props.enableImages) {
 			plugins.push('image');
@@ -131,13 +131,13 @@ module.exports = Field.create({
 
 		if (options.additionalButtons) {
 			var additionalButtons = options.additionalButtons.split(',');
-			for (var i = 0; i < additionalButtons.length; i++) {
+			for (i = 0; i < additionalButtons.length; i++) {
 				toolbar += (' | ' + additionalButtons[i]);
 			}
 		}
 		if (options.additionalPlugins) {
 			var additionalPlugins = options.additionalPlugins.split(',');
-			for (var i = 0; i < additionalPlugins.length; i++) {
+			for (i = 0; i < additionalPlugins.length; i++) {
 				plugins.push(additionalPlugins[i]);
 			}
 		}
@@ -148,10 +148,10 @@ module.exports = Field.create({
 				importcss_append: true,
 				importcss_merge_classes: true
 			};
-			
+
 			_.extend(options.additionalOptions, importcssOptions);
 		}
-		
+
 		//if (!options.overrideToolbar) {
 			//toolbar += ' | code';
 		//}
@@ -195,7 +195,7 @@ module.exports = Field.create({
 		var className = this.props.wysiwyg ? 'wysiwyg' : 'code';
 		return className;
 	},
-	
+
 	renderEditor: function(readOnly) {
 		var className = this.state.isFocused ? 'is-focused' : '';
 		var style = {
@@ -211,9 +211,9 @@ module.exports = Field.create({
 	renderField: function() {
 		return this.renderEditor();
 	},
-	
+
 	renderValue: function() {
 		return this.renderEditor(true);
 	}
-	
+
 });
