@@ -24,10 +24,10 @@ exports = module.exports = function(req, res) {
 	switch (req.params.action) {
 
 		case 'autocomplete':
-			var limit = req.query.limit || 50;
+			var limit = parseInt(req.query.limit, 10) || 50;
 			var page = req.query.page || 1;
 			var skip = limit * (page - 1);
-				
+
 			var filters = req.list.getSearchFilters(req.query.q);
 
 			var count = req.list.model.count(filters);
@@ -55,7 +55,7 @@ exports = module.exports = function(req, res) {
           }
 				});
 			}
-			
+
 			count.exec(function(err, total) {
 
 				if (err) return sendError('database error', err);
@@ -152,11 +152,11 @@ exports = module.exports = function(req, res) {
 		break;
 
 		case 'fetch':
-		
+
 			if (!keystone.security.csrf.validate(req)) {
 				return sendError('invalid csrf');
 			}
-			
+
 			(function() {
 
 				var queryFilters = req.list.getSearchFilters(req.query.search, req.query.filters);
@@ -201,7 +201,7 @@ exports = module.exports = function(req, res) {
 						count: 1
 					});
 				});
-			
+
 			})();
 
 		break;

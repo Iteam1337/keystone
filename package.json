@@ -1,6 +1,6 @@
 {
   "name": "keystone",
-  "version": "0.3.21",
+  "version": "1.1.2",
   "description": "Web Application Framework and Admin GUI / Content Management System built on Express.js and Mongoose",
   "main": "index.js",
   "repository": {
@@ -135,7 +135,6 @@
     "clean": "rimraf ./coverage"
   },
   "engines": {
-    "node": ">= 0.10.28",
-    "npm": ">= 1.4.9"
+    "node": "^6.9.1"
   }
 }
